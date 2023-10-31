@@ -20,12 +20,13 @@ public class UserService {
     }
 
     @Transactional
-    public Pair<String, Boolean> login(LoginDto loginDto) {
+    public Pair<User, Boolean> login(LoginDto loginDto) {
         String userId = loginDto.getUserId();
         String password = loginDto.getPassword();
         User user = userRepository.findByUserIdAndPassword(userId, password);
-        if (user != null) return Pair.of("로그인 성공", true);
-        if (user == null) return Pair.of("로그인 실패", false);
+
+        if (user != null) return Pair.of(user, true);
+        if (user == null) return Pair.of(user, false);
         throw new IllegalArgumentException();
     }
 }

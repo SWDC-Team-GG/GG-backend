@@ -1,16 +1,21 @@
 package com.gagi.swdc.web;
 
+import com.gagi.swdc.domain.user.User;
 import com.gagi.swdc.service.UserService;
 import com.gagi.swdc.service.sha256;
 import com.gagi.swdc.web.dto.LoginDto;
 import com.gagi.swdc.web.dto.SignInDto;
+import com.gagi.swdc.web.dto.UserInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.security.NoSuchAlgorithmException;
 
 @RequiredArgsConstructor
@@ -18,6 +23,18 @@ import java.security.NoSuchAlgorithmException;
 public class UserApiController {
     private final UserService userService;
     private final sha256 sha256;
+
+    @GetMapping("/")
+    public ResponseEntity<UserInfoDto> index(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        UserInfoDto userInfo = (UserInfoDto) session.getAttribute("user");
+
+        if (userInfo != null) {
+            return ResponseEntity.ok(userInfo);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @PostMapping("/signin")
     public ResponseEntity<String> signIn(@RequestBody SignInDto signInDto) throws NoSuchAlgorithmException {
@@ -37,14 +54,36 @@ public class UserApiController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto) throws NoSuchAlgorithmException {
-        if(loginDto.getUserId().isEmpty()) return ResponseEntity.badRequest().body("아이디가 비어있습니다.");
-        if(loginDto.getPassword().isEmpty()) return ResponseEntity.badRequest().body("비밀번호가 비어있습니다.");
-        loginDto.setPassword(sha256.encrypt(loginDto.getPassword()));
+    public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpServletRequest request) {
+        if (loginDto.getUserId().isEmpty()) return ResponseEntity.badRequest().body("아이디가 비어있습니다.");
+        if (loginDto.getPassword().isEmpty()) return ResponseEntity.badRequest().body("비밀번호가 비어있습니다.");
+
         try {
-            Pair<String, Boolean> result = userService.login(loginDto);
-            if(result.getSecond()) return ResponseEntity.ok().body(result.getFirst());
-            if(!result.getSecond()) return ResponseEntity.badRequest().body(result.getFirst());
+            loginDto.setPassword(sha256.encrypt(loginDto.getPassword()));
+        } catch (NoSuchAlgorithmException e) {}
+
+        try {
+            Pair<User, Boolean> result = userService.login(loginDto);
+            if (result.getSecond()) {
+                User user = result.getFirst();
+
+                UserInfoDto info = UserInfoDto.builder()
+                        .userId(user.getUserId())
+                        .name(user.getName())
+                        .scienceLevel(user.getScienceLevel())
+                        .humanitiesLevel(user.getHumanitiesLevel())
+                        .build();
+
+                try {
+                    HttpSession session = request.getSession();
+                    session.setAttribute("user", info);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+
+                return ResponseEntity.ok().body("로그인 성공");
+            }
+            if (!result.getSecond()) return ResponseEntity.badRequest().body("로그인 실패");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("error");
         }
