@@ -103,7 +103,7 @@ public class UserApiController {
         }
     }
 
-    @PutMapping("/level")
+    @PostMapping("/level")
     public ResponseEntity<String> updateLevel(@RequestBody LevelDto levelDto, HttpServletRequest request) {
         UserInfoDto info = getSessionUser(request);
         if (info != null) {
