@@ -3,6 +3,7 @@ package com.gagi.swdc.web;
 import com.gagi.swdc.domain.user.User;
 import com.gagi.swdc.service.UserService;
 import com.gagi.swdc.service.sha256;
+import com.gagi.swdc.web.dto.LevelDto;
 import com.gagi.swdc.web.dto.LoginDto;
 import com.gagi.swdc.web.dto.SignInDto;
 import com.gagi.swdc.web.dto.UserInfoDto;
@@ -101,6 +102,25 @@ public class UserApiController {
             return ResponseEntity.ok("로그아웃 성공");
         } else {
             return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/level")
+    public ResponseEntity<LevelDto> level(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            UserInfoDto userInfo = (UserInfoDto) session.getAttribute("user");
+            if (userInfo != null) {
+                LevelDto level = LevelDto.builder()
+                        .scienceLevel(userInfo.getScienceLevel())
+                        .humanitiesLevel(userInfo.getHumanitiesLevel())
+                        .build();
+                return ResponseEntity.ok(level);
+            } else {
+                return ResponseEntity.badRequest().build();
+            }
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 }
