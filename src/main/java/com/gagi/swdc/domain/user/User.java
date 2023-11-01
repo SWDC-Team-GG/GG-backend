@@ -9,17 +9,20 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @Entity
-public class User {
+public class User { // user 테이블 생성
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 유저 아이디
     @Column(nullable = false)
     private String userId;
 
+    // 이름
     @Column(nullable = false)
     private String name;
 
+    // 비밀번호
     @Column(nullable = false)
     private String password;
 
