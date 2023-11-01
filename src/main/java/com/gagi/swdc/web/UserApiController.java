@@ -23,10 +23,8 @@ public class UserApiController {
     private final sha256 sha256;
 
     @GetMapping("/")
-    public ResponseEntity<User> index(HttpSession session) {
-//        UserInfoDto info = getSessionUser(request);
-//        if (info != null) return ResponseEntity.ok(info);
-        User info = (User) session.getAttribute("user");
+    public ResponseEntity<UserInfoDto> index(HttpServletRequest request) {
+        UserInfoDto info = getSessionUser(request);
         if (info != null) return ResponseEntity.ok(info);
         else return ResponseEntity.badRequest().build();
     }
@@ -50,7 +48,7 @@ public class UserApiController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpSession session) {
+    public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpServletRequest request) {
         if (loginDto.getUserId().isEmpty()) return ResponseEntity.badRequest().body("아이디가 비어있습니다.");
         if (loginDto.getPassword().isEmpty()) return ResponseEntity.badRequest().body("비밀번호가 비어있습니다.");
 
@@ -64,9 +62,8 @@ public class UserApiController {
                 User user = result.getFirst();
 
                 try {
-//                    HttpSession session = request.getSession();
-//                    session.setAttribute("user", user.getId());
-                    session.setAttribute("user", user);
+                    HttpSession session = request.getSession();
+                    session.setAttribute("user", user.getId());
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
@@ -81,15 +78,14 @@ public class UserApiController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<String> logout(HttpSession session) {
-//        HttpSession session = request.getSession(false);
-        session.removeAttribute("user");
-//        if (session != null) {
-//            session.invalidate();
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
             return ResponseEntity.ok("로그아웃 성공");
-//        } else {
-//            return ResponseEntity.badRequest().build();
-//        }
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping("/level")
