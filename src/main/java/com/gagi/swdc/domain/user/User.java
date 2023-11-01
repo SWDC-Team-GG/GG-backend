@@ -35,4 +35,9 @@ public class User {
         this.name = name;
         this.password = password;
     }
+
+    public void update(Long scienceLevel, Long humanitiesLevel) {
+        this.scienceLevel = scienceLevel;
+        this.humanitiesLevel = humanitiesLevel;
+    }
 }

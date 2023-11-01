@@ -27,17 +27,9 @@ public class UserApiController {
 
     @GetMapping("/")
     public ResponseEntity<UserInfoDto> index(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            UserInfoDto userInfo = (UserInfoDto) session.getAttribute("user");
-            if (userInfo != null) {
-                return ResponseEntity.ok(userInfo);
-            } else {
-                return ResponseEntity.badRequest().build();
-            }
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        UserInfoDto info = getSessionUser(request);
+        if (info != null) return ResponseEntity.ok(info);
+        else return ResponseEntity.badRequest().build();
     }
 
     @PostMapping("/signin")
@@ -71,16 +63,9 @@ public class UserApiController {
             if (result.getSecond()) {
                 User user = result.getFirst();
 
-                UserInfoDto info = UserInfoDto.builder()
-                        .userId(user.getUserId())
-                        .name(user.getName())
-                        .scienceLevel(user.getScienceLevel())
-                        .humanitiesLevel(user.getHumanitiesLevel())
-                        .build();
-
                 try {
                     HttpSession session = request.getSession();
-                    session.setAttribute("user", info);
+                    session.setAttribute("user", user.getId());
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
@@ -107,20 +92,54 @@ public class UserApiController {
 
     @GetMapping("/level")
     public ResponseEntity<LevelDto> level(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            UserInfoDto userInfo = (UserInfoDto) session.getAttribute("user");
-            if (userInfo != null) {
-                LevelDto level = LevelDto.builder()
-                        .scienceLevel(userInfo.getScienceLevel())
-                        .humanitiesLevel(userInfo.getHumanitiesLevel())
-                        .build();
-                return ResponseEntity.ok(level);
-            } else {
-                return ResponseEntity.badRequest().build();
-            }
+        UserInfoDto info = getSessionUser(request);
+        if (info != null) {
+            LevelDto level = LevelDto.builder()
+                    .scienceLevel(info.getScienceLevel())
+                    .humanitiesLevel(info.getHumanitiesLevel())
+                    .build();
+
+            return ResponseEntity.ok(level);
         } else {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/level")
+    public ResponseEntity<String> updateLevel(@RequestBody LevelDto levelDto, HttpServletRequest request) {
+        UserInfoDto info = getSessionUser(request);
+        if (info != null) {
+            try {
+                userService.updateLevel(info.getId(), levelDto);
+                return ResponseEntity.ok("업데이트 완료");
+            } catch (IllegalArgumentException e) {}
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    public UserInfoDto getSessionUser(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            Long id = (Long) session.getAttribute("user");
+            if (id != null) {
+                User user = userService.select(id);
+
+                UserInfoDto userInfo = UserInfoDto.builder()
+                        .id(user.getId())
+                        .userId(user.getUserId())
+                        .name(user.getName())
+                        .scienceLevel(user.getScienceLevel())
+                        .humanitiesLevel(user.getHumanitiesLevel())
+                        .build();
+
+                return userInfo;
+            } else {
+                return null;
+            }
+        } else {
+            return null;
         }
     }
 }

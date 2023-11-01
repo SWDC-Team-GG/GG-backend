@@ -2,6 +2,7 @@ package com.gagi.swdc.service;
 
 import com.gagi.swdc.domain.user.User;
 import com.gagi.swdc.domain.user.UserRepository;
+import com.gagi.swdc.web.dto.LevelDto;
 import com.gagi.swdc.web.dto.LoginDto;
 import com.gagi.swdc.web.dto.SignInDto;
 import lombok.RequiredArgsConstructor;
@@ -28,5 +29,19 @@ public class UserService {
         if (user != null) return Pair.of(user, true);
         if (user == null) return Pair.of(user, false);
         throw new IllegalArgumentException();
+    }
+
+    @Transactional
+    public User select(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("유저가 없습니다."));
+    }
+
+    @Transactional
+    public void updateLevel(Long id, LevelDto levelDto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("유저가 없습니다."));
+
+        user.update(levelDto.getScienceLevel(), levelDto.getHumanitiesLevel());
     }
 }
