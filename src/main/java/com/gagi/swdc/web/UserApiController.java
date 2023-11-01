@@ -26,11 +26,14 @@ public class UserApiController {
 
     @GetMapping("/")
     public ResponseEntity<UserInfoDto> index(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        UserInfoDto userInfo = (UserInfoDto) session.getAttribute("user");
-
-        if (userInfo != null) {
-            return ResponseEntity.ok(userInfo);
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            UserInfoDto userInfo = (UserInfoDto) session.getAttribute("user");
+            if (userInfo != null) {
+                return ResponseEntity.ok(userInfo);
+            } else {
+                return ResponseEntity.badRequest().build();
+            }
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -46,10 +49,10 @@ public class UserApiController {
         try {
             signInDto.setPassword(sha256.encrypt(signInDto.getPassword()));
             userService.signIn(signInDto);
-            return ResponseEntity.ok().body("회원가입 성공");
+            return ResponseEntity.ok("회원가입 성공");
         } catch (IllegalArgumentException e) {
             System.out.println(e);
-            return ResponseEntity.badRequest().body("error");
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -81,12 +84,23 @@ public class UserApiController {
                     e.printStackTrace();
                 }
 
-                return ResponseEntity.ok().body("로그인 성공");
+                return ResponseEntity.ok("로그인 성공");
             }
-            if (!result.getSecond()) return ResponseEntity.badRequest().body("로그인 실패");
+            if (!result.getSecond()) return ResponseEntity.badRequest().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("error");
         }
         throw new IllegalArgumentException();
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+            return ResponseEntity.ok("로그아웃 성공");
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
