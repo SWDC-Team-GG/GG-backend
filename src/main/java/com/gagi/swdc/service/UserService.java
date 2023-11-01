@@ -44,4 +44,9 @@ public class UserService {
 
         user.update(levelDto.getScienceLevel(), levelDto.getHumanitiesLevel());
     }
+
+    @Transactional
+    public Boolean checkUserId(String userId) {
+        return userRepository.findByUserId(userId) != null;
+    }
 }

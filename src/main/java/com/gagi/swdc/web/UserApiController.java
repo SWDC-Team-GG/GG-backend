@@ -10,10 +10,7 @@ import com.gagi.swdc.web.dto.UserInfoDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -39,6 +36,7 @@ public class UserApiController {
         if(signInDto.getPassword().isEmpty()) return ResponseEntity.badRequest().body("비밀번호가 비어있습니다.");
         if(signInDto.getUserId().length() > 25) return ResponseEntity.badRequest().body("유저 아이디가 25글자를 넘으면 안됩니다.");
         if(signInDto.getName().length() > 10) return ResponseEntity.badRequest().body("이름이 10글자를 넘으면 안됩니다.");
+        if(userService.checkUserId(signInDto.getUserId())) return ResponseEntity.badRequest().body("같은 아이디가 있습니다.");
         try {
             signInDto.setPassword(sha256.encrypt(signInDto.getPassword()));
             userService.signIn(signInDto);
@@ -105,7 +103,7 @@ public class UserApiController {
         }
     }
 
-    @PostMapping("/level")
+    @PutMapping("/level")
     public ResponseEntity<String> updateLevel(@RequestBody LevelDto levelDto, HttpServletRequest request) {
         UserInfoDto info = getSessionUser(request);
         if (info != null) {
