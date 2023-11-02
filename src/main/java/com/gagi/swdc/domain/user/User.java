@@ -32,10 +32,10 @@ public class User { // user 테이블 생성
     private String password;
 
     @Column
-    private Long scienceLevel;
+    private String education;
 
     @Column
-    private Long humanitiesLevel;
+    private String field;
 
     @Column
     @ColumnDefault("false")
@@ -49,9 +49,9 @@ public class User { // user 테이블 생성
         this.survey = survey;
     }
 
-    public void update(Long scienceLevel, Long humanitiesLevel) {
-        this.scienceLevel = scienceLevel;
-        this.humanitiesLevel = humanitiesLevel;
+    public void update(String education, String field) {
+        this.education = education;
+        this.field = field;
     }
 
     public void updateSurvey(boolean survey) {

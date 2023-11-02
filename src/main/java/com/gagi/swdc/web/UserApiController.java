@@ -93,8 +93,8 @@ public class UserApiController {
         UserInfoDto info = getSessionUser(request);
         if (info != null) {
             LevelDto level = LevelDto.builder()
-                    .scienceLevel(info.getScienceLevel())
-                    .humanitiesLevel(info.getHumanitiesLevel())
+                    .education(info.getEducation())
+                    .field(info.getField())
                     .build();
 
             return ResponseEntity.ok(level);
@@ -128,8 +128,8 @@ public class UserApiController {
                         .id(user.getId())
                         .userId(user.getUserId())
                         .name(user.getName())
-                        .scienceLevel(user.getScienceLevel())
-                        .humanitiesLevel(user.getHumanitiesLevel())
+                        .education(user.getEducation())
+                        .field(user.getField())
                         .survey(user.getSurvey())
                         .build();
 

@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class LevelDto {
-    private Long scienceLevel;
-    private Long humanitiesLevel;
+    private String education;
+    private String field;
 
     @Builder
-    public LevelDto(Long scienceLevel, Long humanitiesLevel) {
-        this.scienceLevel = scienceLevel;
-        this.humanitiesLevel = humanitiesLevel;
+    public LevelDto(String education, String field) {
+        this.education = education;
+        this.field = field;
     }
 }

@@ -42,7 +42,7 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("유저가 없습니다."));
 
-        user.update(levelDto.getScienceLevel(), levelDto.getHumanitiesLevel());
+        user.update(levelDto.getEducation(), levelDto.getField());
     }
 
     @Transactional
