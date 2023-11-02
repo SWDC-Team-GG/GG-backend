@@ -130,6 +130,7 @@ public class UserApiController {
                         .name(user.getName())
                         .scienceLevel(user.getScienceLevel())
                         .humanitiesLevel(user.getHumanitiesLevel())
+                        .survey(user.getSurvey())
                         .build();
 
                 return userInfo;
@@ -139,5 +140,14 @@ public class UserApiController {
         } else {
             return null;
         }
+    }
+
+    @GetMapping("/survey")
+    public ResponseEntity<String> updateSurvey(HttpServletRequest request) {
+        UserInfoDto info = getSessionUser(request);
+        if (info != null) {
+            userService.updateSurvey(info.getId());
+            return ResponseEntity.ok("survey업데이트 성공");
+        } else return ResponseEntity.badRequest().build();
     }
 }

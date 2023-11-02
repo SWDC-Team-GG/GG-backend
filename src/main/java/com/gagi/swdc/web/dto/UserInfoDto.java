@@ -14,13 +14,15 @@ public class UserInfoDto implements Serializable {
     private String name;
     private Long scienceLevel;
     private Long humanitiesLevel;
+    private Boolean survey;
 
     @Builder
-    public UserInfoDto(Long id, String userId, String name, Long scienceLevel, Long humanitiesLevel) {
+    public UserInfoDto(Long id, String userId, String name, Long scienceLevel, Long humanitiesLevel, Boolean survey) {
         this.id = id;
         this.userId = userId;
         this.name = name;
         this.scienceLevel = scienceLevel;
         this.humanitiesLevel = humanitiesLevel;
+        this.survey = survey;
     }
 }

@@ -46,6 +46,14 @@ public class UserService {
     }
 
     @Transactional
+    public void updateSurvey(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("유저가 없습니다."));
+
+        user.updateSurvey(true);
+    }
+
+    @Transactional
     public Boolean checkUserId(String userId) {
         return userRepository.findByUserId(userId) != null;
     }
