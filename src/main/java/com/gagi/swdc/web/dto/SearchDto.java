@@ -28,4 +28,13 @@ public class SearchDto {
                 .translateWordLevel(translateWordLevel)
                 .build();
     }
+
+    public SearchDto(Search entity) {
+        this.userId = entity.getUserId();
+        this.meaning = entity.getMeaning();
+        this.part = entity.getPart();
+        this.plainWord = entity.getPlainWord();
+        this.translateWord = entity.getTranslateWord();
+        this.translateWordLevel = entity.getTranslateWordLevel();
+    }
 }

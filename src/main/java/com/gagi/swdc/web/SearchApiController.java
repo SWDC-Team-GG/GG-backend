@@ -35,8 +35,17 @@ public class SearchApiController {
         return ResponseEntity.badRequest().build();
     }
 
-//    @GetMapping("/search")
-//    public ResponseEntity<SearchDto> select(HttpServletRequest request, @RequestBody List<SearchDto> searchDto) {
-//        if (saer)
-//    }
+    @GetMapping("/search")
+    public ResponseEntity<List<SearchDto>> select(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            Long id = (Long) session.getAttribute("user");
+            if (id != null) {
+                User user = userService.select(id);
+                List<SearchDto> data = searchService.select(user.getId());
+                return ResponseEntity.ok(data);
+            }
+        }
+        return ResponseEntity.badRequest().build();
+    }
 }
