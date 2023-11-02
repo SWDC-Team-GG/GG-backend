@@ -11,6 +11,6 @@ public class SearchService {
     private final SearchRepository searchRepository;
 
     public void save(SaveSearchDto saveSearchDto) {
-//        searchRepository.save(saveSearchDto.toEntity());
+        searchRepository.save(saveSearchDto.toEntity());
     }
 }

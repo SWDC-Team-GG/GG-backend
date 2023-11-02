@@ -143,11 +143,11 @@ public class UserApiController {
     }
 
     @GetMapping("/survey")
-    public ResponseEntity<String> updateSurvey(HttpServletRequest request) {
+    public boolean updateSurvey(HttpServletRequest request) {
         UserInfoDto info = getSessionUser(request);
         if (info != null) {
             userService.updateSurvey(info.getId());
-            return ResponseEntity.ok("survey업데이트 성공");
-        } else return ResponseEntity.badRequest().build();
+            return true;
+        } else return false;
     }
 }

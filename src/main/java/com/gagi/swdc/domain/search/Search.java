@@ -15,9 +15,8 @@ public class Search {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "id")
-//    private User user;
+    @Column
+    private Long userId;
 
     @Column
     private String originSearch;
@@ -28,11 +27,11 @@ public class Search {
     @Column
     private String mean;
 
-//    @Builder
-//    public Search(User userId, String originSearch, String afterSearch, String mean) {
-//        this.user = userId;
-//        this.originSearch = originSearch;
-//        this.afterSearch = afterSearch;
-//        this.mean = mean;
-//    }
+    @Builder
+    public Search(Long userId, String originSearch, String afterSearch, String mean) {
+        this.userId = userId;
+        this.originSearch = originSearch;
+        this.afterSearch = afterSearch;
+        this.mean = mean;
+    }
 }

@@ -8,17 +8,17 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class SaveSearchDto {
-    private User userId;
+    private Long userId;
     private String originSearch;
     private String afterSearch;
     private String mean;
 
-//    public Search toEntity() {
-//        return Search.builder()
-//                .userId(userId)
-//                .originSearch(originSearch)
-//                .afterSearch(afterSearch)
-//                .mean(mean)
-//                .build();
-//    }
+    public Search toEntity() {
+        return Search.builder()
+                .userId(userId)
+                .originSearch(originSearch)
+                .afterSearch(afterSearch)
+                .mean(mean)
+                .build();
+    }
 }

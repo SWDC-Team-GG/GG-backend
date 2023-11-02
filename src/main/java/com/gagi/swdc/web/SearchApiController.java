@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class SearchApiController {
     private final SearchService searchService;
 
-//    @PostMapping("/search")
+    @PostMapping("/search")
     public void save(SaveSearchDto saveSearchDto) {
-
+        searchService.save(saveSearchDto);
     }
 }
