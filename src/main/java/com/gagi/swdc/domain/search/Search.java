@@ -19,19 +19,27 @@ public class Search {
     private Long userId;
 
     @Column
-    private String originSearch;
+    private String meaning;
 
     @Column
-    private String afterSearch;
+    private String part;
 
     @Column
-    private String mean;
+    private String plainWord;
+
+    @Column
+    private String translateWord;
+
+    @Column
+    private String translateWordLevel;
 
     @Builder
-    public Search(Long userId, String originSearch, String afterSearch, String mean) {
+    public Search(Long userId, String meaning, String part, String plainWord, String translateWord, String translateWordLevel) {
         this.userId = userId;
-        this.originSearch = originSearch;
-        this.afterSearch = afterSearch;
-        this.mean = mean;
+        this.meaning = meaning;
+        this.part = part;
+        this.plainWord = plainWord;
+        this.translateWord = translateWord;
+        this.translateWordLevel = translateWordLevel;
     }
 }

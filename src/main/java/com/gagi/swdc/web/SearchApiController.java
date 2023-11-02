@@ -1,20 +1,42 @@
 package com.gagi.swdc.web;
 
+import com.gagi.swdc.domain.user.User;
 import com.gagi.swdc.service.SearchService;
-import com.gagi.swdc.web.dto.SaveSearchDto;
+import com.gagi.swdc.service.UserService;
+import com.gagi.swdc.web.dto.SearchDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
 public class SearchApiController {
     private final SearchService searchService;
+    private final UserService userService;
 
     @PostMapping("/search")
-    public ResponseEntity<String> save(SaveSearchDto saveSearchDto) {
-        if (searchService.save(saveSearchDto)) return ResponseEntity.ok("성공");
-        else return ResponseEntity.badRequest().build();
+    public ResponseEntity<String> save(HttpServletRequest request, @RequestBody List<SearchDto> searchDto) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            Long id = (Long) session.getAttribute("user");
+            if (id != null) {
+                User user = userService.select(id);
+                for(SearchDto search : searchDto) {
+                    search.setUserId(user.getId());
+                    searchService.save(search);
+                }
+                return ResponseEntity.ok("성공");
+            }
+        }
+        return ResponseEntity.badRequest().build();
     }
+
+//    @GetMapping("/search")
+//    public ResponseEntity<SearchDto> select(HttpServletRequest request, @RequestBody List<SearchDto> searchDto) {
+//        if (saer)
+//    }
 }

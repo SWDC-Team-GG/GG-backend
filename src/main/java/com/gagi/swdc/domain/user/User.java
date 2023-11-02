@@ -12,7 +12,6 @@ import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor
-@DynamicInsert
 @Entity
 public class User { // user 테이블 생성
     @Id
