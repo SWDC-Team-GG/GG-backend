@@ -10,7 +10,12 @@ import org.springframework.stereotype.Service;
 public class SearchService {
     private final SearchRepository searchRepository;
 
-    public void save(SaveSearchDto saveSearchDto) {
-        searchRepository.save(saveSearchDto.toEntity());
+    public boolean save(SaveSearchDto saveSearchDto) {
+        try {
+            searchRepository.save(saveSearchDto.toEntity());
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 }

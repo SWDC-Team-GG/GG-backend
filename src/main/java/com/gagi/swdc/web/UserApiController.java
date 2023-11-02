@@ -145,9 +145,9 @@ public class UserApiController {
     @GetMapping("/survey")
     public boolean updateSurvey(HttpServletRequest request) {
         UserInfoDto info = getSessionUser(request);
-        if (info != null) {
+        if (info != null && !info.getSurvey()) {
             userService.updateSurvey(info.getId());
-            return true;
-        } else return false;
+            return false;
+        } else return true;
     }
 }
