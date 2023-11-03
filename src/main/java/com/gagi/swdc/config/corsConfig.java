@@ -9,7 +9,7 @@ public class corsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://localhost:3000", "https://gg-frontend-git-younghyun-gg-frontend.vercel.app", "http://localhost:5000")
+                .allowedOrigins("https://localhost:3000", "https://gg-frontend-eight.vercel.app/", "http://localhost:5000")
                 .allowedMethods("*")
                 .allowCredentials(true);
     }
