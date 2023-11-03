@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class LevelDto {
-    private String education;
+    private int education;
     private float field;
 
     @Builder
-    public LevelDto(String education, float field) {
+    public LevelDto(int education, float field) {
         this.education = education;
         this.field = field;
     }
