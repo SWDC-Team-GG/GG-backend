@@ -36,16 +36,14 @@ public class User { // user 테이블 생성
     @Column
     private float field;
 
-    @Column
-    @ColumnDefault("false")
-    private Boolean survey;
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean survey = false;
 
     @Builder
-    public User(String userId, String name, String password, Boolean survey) {
+    public User(String userId, String name, String password) {
         this.userId = userId;
         this.name = name;
         this.password = password;
-        this.survey = survey;
     }
 
     public void update(int education, float field) {
