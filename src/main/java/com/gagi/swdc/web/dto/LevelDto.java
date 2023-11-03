@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LevelDto {
     private String education;
-    private String field;
+    private float field;
 
     @Builder
-    public LevelDto(String education, String field) {
+    public LevelDto(String education, float field) {
         this.education = education;
         this.field = field;
     }

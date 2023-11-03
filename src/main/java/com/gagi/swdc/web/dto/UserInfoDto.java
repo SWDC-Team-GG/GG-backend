@@ -13,11 +13,11 @@ public class UserInfoDto implements Serializable {
     private String userId;
     private String name;
     private String education;
-    private String field;
+    private float field;
     private Boolean survey;
 
     @Builder
-    public UserInfoDto(Long id, String userId, String name, String education, String field, Boolean survey) {
+    public UserInfoDto(Long id, String userId, String name, String education, float field, Boolean survey) {
         this.id = id;
         this.userId = userId;
         this.name = name;

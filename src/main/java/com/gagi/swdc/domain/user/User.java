@@ -34,7 +34,7 @@ public class User { // user 테이블 생성
     private String education;
 
     @Column
-    private String field;
+    private float field;
 
     @Column
     @ColumnDefault("false")
@@ -48,7 +48,7 @@ public class User { // user 테이블 생성
         this.survey = survey;
     }
 
-    public void update(String education, String field) {
+    public void update(String education, float field) {
         this.education = education;
         this.field = field;
     }
