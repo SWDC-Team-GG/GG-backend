@@ -29,16 +29,22 @@ public class UserApiController {
         else return ResponseEntity.badRequest().build();
     }
 
+    // 회원 가입
     @PostMapping("/signin")
     public ResponseEntity<String> signIn(@RequestBody SignInDto signInDto) throws NoSuchAlgorithmException {
+        // 예외 처리
         if(signInDto.getUserId().isEmpty()) return ResponseEntity.badRequest().body("아이디가 비어있습니다.");
         if(signInDto.getName().isEmpty()) return ResponseEntity.badRequest().body("이름이 비어있습니다.");
         if(signInDto.getPassword().isEmpty()) return ResponseEntity.badRequest().body("비밀번호가 비어있습니다.");
         if(signInDto.getUserId().length() > 25) return ResponseEntity.badRequest().body("유저 아이디가 25글자를 넘으면 안됩니다.");
         if(signInDto.getName().length() > 10) return ResponseEntity.badRequest().body("이름이 10글자를 넘으면 안됩니다.");
         if(userService.checkUserId(signInDto.getUserId())) return ResponseEntity.badRequest().body("같은 아이디가 있습니다.");
+
         try {
+            // 비밀번호 암호화
             signInDto.setPassword(sha256.encrypt(signInDto.getPassword()));
+
+            // 회원 생성
             userService.signIn(signInDto);
             return ResponseEntity.ok("회원가입 성공");
         } catch (IllegalArgumentException e) {
@@ -47,20 +53,25 @@ public class UserApiController {
         }
     }
 
+    // 로그인
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpServletRequest request) {
+        // 예외 처리
         if (loginDto.getUserId().isEmpty()) return ResponseEntity.badRequest().body("아이디가 비어있습니다.");
         if (loginDto.getPassword().isEmpty()) return ResponseEntity.badRequest().body("비밀번호가 비어있습니다.");
 
+        // 비밀번호 암호화
         try {
             loginDto.setPassword(sha256.encrypt(loginDto.getPassword()));
         } catch (NoSuchAlgorithmException e) {}
 
         try {
+            // 회원 조회
             Pair<User, Boolean> result = userService.login(loginDto);
             if (result.getSecond()) {
                 User user = result.getFirst();
 
+                // 세션에 회원 저장
                 try {
                     HttpSession session = request.getSession();
                     session.setAttribute("user", user.getId());
@@ -77,10 +88,13 @@ public class UserApiController {
         throw new IllegalArgumentException();
     }
 
+    // 로그아웃
     @GetMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request) {
+        // 세션 조회
         HttpSession session = request.getSession(false);
         if (session != null) {
+            // 세션 삭제
             session.invalidate();
             return ResponseEntity.ok("로그아웃 성공");
         } else {
