@@ -35,6 +35,7 @@ public class SecurityConfig {
         http.cors().and()
                 .authorizeRequests()
                 .requestMatchers("/user").authenticated()
+                .requestMatchers("/translate").authenticated()
                 .anyRequest().permitAll();
 
         http.exceptionHandling().authenticationEntryPoint(
