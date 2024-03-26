@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RequiredArgsConstructor
 @RequestMapping("/translate")
 @RestController
@@ -14,8 +16,8 @@ public class TranslationController {
     private final QuestionService questionService;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @GetMapping
-    public AnswerResponse question(@RequestBody QuestionRequest request) {
+    @PostMapping
+    public AnswerResponse question(@RequestBody QuestionRequest request) throws IOException {
         return questionService.execute(request);
     }
 }
