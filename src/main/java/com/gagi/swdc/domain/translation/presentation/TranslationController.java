@@ -17,7 +17,7 @@ public class TranslationController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public AnswerResponse question(@RequestBody QuestionRequest request) throws IOException {
+    public String question(@RequestBody QuestionRequest request) {
         return questionService.execute(request);
     }
 }

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 public class QuestionRequest {
     private String question;
 
-    public Translation toEntity() {
-        return new Translation(question);
+    public Translation toEntity(String answer) {
+        return new Translation(question, answer);
     }
 }

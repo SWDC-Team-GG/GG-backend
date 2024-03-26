@@ -17,7 +17,8 @@ public class Translation {
 
     private String answer;
 
-    public Translation(String question) {
+    public Translation(String question, String answer) {
         this.question = question;
+        this.answer = answer;
     }
 }
