@@ -4,6 +4,8 @@ import com.gagi.swdc.domain.mean.domain.Mean;
 import com.gagi.swdc.domain.mean.domain.repository.MeanRepository;
 import com.gagi.swdc.domain.translation.domain.repository.TranslationRepository;
 import com.gagi.swdc.domain.translation.presentation.dto.req.QuestionRequest;
+import com.gagi.swdc.domain.user.domain.User;
+import com.gagi.swdc.domain.user.facade.UserFacade;
 import com.gagi.swdc.global.feign.clova.ClovaChatClient;
 import com.gagi.swdc.global.feign.clova.dto.req.ClovaChatCompletionsRequest;
 import lombok.RequiredArgsConstructor;
@@ -20,20 +22,22 @@ import java.util.Map;
 public class QuestionService {
     private final TranslationRepository translationRepository;
     private final MeanRepository meanRepository;
+    private final UserFacade userFacade;
     private final ClovaChatClient clovaChatClient;
 
     @Transactional
     public String execute(QuestionRequest request) {
+        User user = userFacade.getCurrentUser();
         List<String> answer = parsing(makeAnswer(request.getQuestion()));
         List<Mean> means = new ArrayList<>();
 
         for (int i = 1; i < answer.size(); i++) {
             String[] mean = answer.get(i).split("-");
-            means.add(new Mean(mean[0].trim(), mean[1].trim()));
+            means.add(new Mean(mean[0].trim(), mean[1].trim(), user));
         }
 
         meanRepository.saveAll(means);
-        translationRepository.save(request.toEntity(answer.get(0)));
+        translationRepository.save(request.toEntity(answer.get(0), user));
 
         return answer.get(0);
     }

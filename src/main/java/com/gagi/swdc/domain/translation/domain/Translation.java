@@ -1,9 +1,7 @@
 package com.gagi.swdc.domain.translation.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.gagi.swdc.domain.user.domain.User;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -17,8 +15,13 @@ public class Translation {
 
     private String answer;
 
-    public Translation(String question, String answer) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public Translation(String question, String answer, User user) {
         this.question = question;
         this.answer = answer;
+        this.user = user;
     }
 }

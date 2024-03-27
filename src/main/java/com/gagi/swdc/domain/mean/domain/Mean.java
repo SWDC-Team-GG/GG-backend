@@ -1,9 +1,7 @@
 package com.gagi.swdc.domain.mean.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.gagi.swdc.domain.user.domain.User;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -18,8 +16,13 @@ public class Mean {
 
     private String mean;
 
-    public Mean(String word, String mean) {
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public Mean(String word, String mean, User user) {
         this.word = word;
         this.mean = mean;
+        this.user = user;
     }
 }
